@@ -15,6 +15,24 @@ require_once'pdo.php';
 <body class="bg-gray-800 flex flex-row h-screen">
     
     <div class="h-full w-1/4 border-black border-r-2">
+
+        <ul>
+            <?php
+
+            if (!empty($playlists)) {
+
+                foreach ($playlists as $playlist) {
+                
+                    echo '<li class="text-white">' . $playlist["name"] . '</li>';
+
+                }
+
+            }
+
+            ?>
+
+        </ul>
+
     </div>
 
     <div class="h-full w-1/4">
