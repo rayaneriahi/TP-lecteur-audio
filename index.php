@@ -1,3 +1,9 @@
+<?php
+
+require_once'pdo.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +24,39 @@
 
         <div class="w-full h-1/2 border-black border-b-2"></div>
 
-        <div class="w-full h-1/2"></div>
+        <div class="w-full h-1/2">
+
+            <form action="add-comment.php" method="post">
+
+                <label for="text" class="text-white">Add a comment</label>
+
+                <input type="text" name="text">
+
+                <input type="hidden" name="songId" value="1">
+
+                <button type="submit" class="text-white bg-gray-600">Comment</button>
+
+            </form>
+
+            <ul>
+
+                <?php
+                
+                if (!empty($comments)) {
+
+                    foreach($comments as $comment) {
+
+                        echo "<li class='text-white'>" . $comment["text"] . "</li>";
+                        
+                    }
+                    
+                }
+                
+                ?>
+
+            </ul>
+
+        </div>
 
     </div>
 
