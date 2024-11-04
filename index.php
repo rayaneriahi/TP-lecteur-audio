@@ -11,6 +11,7 @@ require_once'pdo.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Lecteur audio</title>
+
 </head>
 <body class="bg-gray-800 flex flex-row h-screen">
     
@@ -22,43 +23,48 @@ require_once'pdo.php';
 
     <div class="flex flex-col border-black border-l-2 h-full w-1/2">
 
-        <div class="w-full h-1/2 border-black border-b-2"></div>
+    <!-- Élément audio sans contrôles visibles -->
+    <audio class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
+    <audio class="myAudio" src="assets/music/music2.mp3" preload="auto"></audio>
+    <button id="audioButton" class="text-white">Play</button>
 
-        <div class="w-full h-1/2">
+    <div class="w-full h-1/2 border-black border-b-2"></div>
+    
 
-            <form action="add-comment.php" method="post">
+    <div class="w-full h-1/2">
 
-                <label for="text" class="text-white">Add a comment</label>
+        <form action="add-comment.php" method="post">
 
-                <input type="text" name="text">
+            <label for="text" class="text-white">Add a comment</label>
 
-                <input type="hidden" name="songId" value="1">
+            <input type="text" name="text">
 
-                <button type="submit" class="text-white bg-gray-600">Comment</button>
+            <input type="hidden" name="songId" value="1">
 
-            </form>
+            <button type="submit" class="text-white bg-gray-600">Comment</button>
 
-            <ul>
+        </form>
 
-                <?php
-                
-                if (!empty($comments)) {
+        <ul>
 
-                    foreach($comments as $comment) {
+            <?php
+            
+            if (!empty($comments)) {
 
-                        echo "<li class='text-white'>" . $comment["text"] . "</li>";
-                        
-                    }
+                foreach($comments as $comment) {
+
+                    echo "<li class='text-white'>" . $comment["text"] . "</li>";
                     
                 }
                 
-                ?>
+            }
+            
+            ?>
 
-            </ul>
-
-        </div>
+        </ul>
 
     </div>
 
+<script src="audio.js"></script>
 </body>
 </html>
