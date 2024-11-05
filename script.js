@@ -12,20 +12,19 @@ btnPlaylist.forEach(btn => {
             })
         });
         const data = await response.json();
-        console.log(data);
         const song = document.querySelector('#song');
         song.innerHTML = `<h1 class="text-white">${data.playlistName}</h1> ${data.songs.map(song => `<button id="${song.id}" class="text-white btnsSong">${song.name}</button><br>`).join('')}`
         const btnsSong = document.querySelectorAll('.btnsSong');
         btnsSong.forEach(btnSong => {
             btnSong.addEventListener('click', () => {
-                playPlayer(btnSong, data)
+                displayComment(btnSong, data)
+                displaySong(btnSong)
             })
-            console.log("click")
         });
     });
 })
 
-async function playPlayer(btnSong) {
+async function displayComment(btnSong) {
     const response = await fetch("comment.php", {
         method: "POST",
         headers: {
@@ -37,7 +36,6 @@ async function playPlayer(btnSong) {
     });
     const data = await response.json();
     const comment = document.querySelector('#comment');
-    console.log(btnSong.id)
     comment.innerHTML =          `<form id="form" action="add-comment.php" method="post">
     <label for="text" class="text-white">Add a comment</label>
     <input id="inputText" type="text" name="text">
@@ -45,7 +43,6 @@ async function playPlayer(btnSong) {
     <button type="submit" class="text-white bg-gray-600">Comment</button>
 </form>
 <ul>${data.commentsText.map(commentText => `<li class='text-white'>${commentText}</li>`).join('')}</ul>`
-console.log(data.commentsText)
 
 const form = document.querySelector('#form');
 form.addEventListener('submit', (event) => {
@@ -60,6 +57,22 @@ form.addEventListener('submit', (event) => {
             "songId": form.querySelector('#inputSongId').value
         })
     })
-    playPlayer(btnSong)
+    displayComment(btnSong)
 })
+}
+
+async function displaySong(btnSong) {
+    const response = await fetch("fetch-song.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "songId": btnSong.id
+        })
+    });
+    const data = await response.json();
+    console.log(data.song.mp3)
+    const audio = new Audio(data.song.mp3);
+    audio.play();
 }

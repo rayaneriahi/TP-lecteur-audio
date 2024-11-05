@@ -40,12 +40,11 @@ require_once'pdo.php';
     <div class="flex flex-col border-black border-l-2 h-full w-1/2">
 
         <div class="w-full h-1/2 border-black border-b-2">
-          
-          <!-- Élément audio sans contrôles visibles -->
-          <audio class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
-          <audio class="myAudio" src="assets/music/music2.mp3" preload="auto"></audio>
+        
+          <!-- <audio class="myAudio" src="assets/music/music1.mp3" preload="auto" controls></audio>
+          <audio class="myAudio" src="assets/music/music2.mp3" preload="auto" controls></audio>
           <button id="audioButton" class="text-white">Play</button>
-       
+        -->
         </div>
 
         <div id="comment" class="w-full h-1/2">
