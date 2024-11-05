@@ -26,7 +26,8 @@ require_once'pdo.php';
     <!-- Élément audio sans contrôles visibles -->
     <audio class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
     <audio class="myAudio" src="assets/music/music2.mp3" preload="auto"></audio>
-    <button id="audioButton" class="text-white">Play</button>
+    <button id="audioButton" class="text-white">Play/Pause</button>
+    <button id="repeatButton" class="text-white">No repeat</button> <!-- Bouton pour activer/désactiver la répétition -->
 
     <div class="w-full h-1/2 border-black border-b-2"></div>
     
