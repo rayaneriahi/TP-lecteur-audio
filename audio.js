@@ -1,8 +1,6 @@
 const audioButton = document.getElementById("audioButton");
 const audio = document.querySelectorAll(".myAudio");
-console.log(audio)
 let a = 0
-console.log(audio.length - 1)
 
 audioButton.addEventListener("click", () => {
         if (audio[a].paused) {
