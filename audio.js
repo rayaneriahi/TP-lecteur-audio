@@ -1,8 +1,8 @@
 const audioButton = document.getElementById("audioButton");
 const repeatButton = document.getElementById("repeatButton");
 const audio = document.querySelectorAll(".myAudio");
-console.log(audio)
 let a = 0
+
 let repeatMode = "none"; // Options possibles: "none", "track", "playlist"
 
 
