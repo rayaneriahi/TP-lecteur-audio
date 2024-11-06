@@ -15,15 +15,15 @@ require_once'pdo.php';
 </head>
 <body class="bg-gray-800 flex flex-row h-screen">
     
-    <div class="h-full w-1/4 border-black border-r-2 p-5 space-y-3 overflow-y-auto">
+    <div class="h-full w-1/5 border-black border-r-2 p-5 space-y-3 overflow-y-auto break-all">
 
 
             <?php
 
             if (!empty($playlists)) {
-                echo "<h1 class='text-white text-5xl mb-3'>Playlists</h1>";
+                echo "<h1 class='text-white text-4xl mb-3'>Playlists</h1>";
                 foreach ($playlists as $playlist) {
-                    echo '<button id="' . $playlist["id"] . '" class="text-white btnPlaylist text-2xl">' . $playlist["name"] . '</button><br>';
+                    echo '<button id="' . $playlist["id"] . '" class="text-white btnPlaylist text-xl hover:text-gray-500">' . $playlist["name"] . '</button><br>';
                 }
             }
 
@@ -31,23 +31,23 @@ require_once'pdo.php';
 
     </div>
 
-    <div id="song" class="h-full w-1/4 p-5 space-y-3 overflow-y-auto">
+    <div id="song" class="h-full w-1/5 p-5 space-y-3 overflow-y-auto break-all">
     </div>
 
-    <div class="flex flex-col border-black border-l-2 h-full w-1/2">
+    <div class="flex flex-col border-black border-l-2 h-full w-3/5">
 
 
     <!-- Élément audio sans contrôles visibles -->
-    <audio id="myAudio" class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
+    <!-- <audio id="myAudio" class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
     <audio class="myAudio" src="assets/music/music2.mp3" preload="auto"></audio>
     <button id="audioButton" class="text-white">Play/Pause</button>
-    <button id="repeatButton" class="text-white">No repeat</button> <!-- Bouton pour activer/désactiver la répétition -->
+    <button id="repeatButton" class="text-white">No repeat</button> Bouton pour activer/désactiver la répétition -->
 
 
         <div id="player" class="w-full h-1/2 border-black border-b-2 items-center justify-center flex flex-col space-y-20  px-10">
         </div>
 
-        <div id="comment" class="w-full h-1/2 p-5 space-y-5 overflow-y-auto">
+        <div id="comment" class="w-full h-1/2 p-5 space-y-5 overflow-y-auto break-all">
         </div>
 
     </div>
