@@ -1,4 +1,5 @@
 const btnPlaylist = document.querySelectorAll('.btnPlaylist');
+let nextSong = null;
 
 btnPlaylist.forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -13,12 +14,12 @@ btnPlaylist.forEach(btn => {
         });
         const data = await response.json();
         const song = document.querySelector('#song');
-        song.innerHTML = `<h1 class="text-white text-5xl mb-3">${data.playlistName}</h1> ${data.songs.map(song => `<button id="${song.songNumber}" class="text-white btnsSong text-2xl">${song.name}</button><br>`).join('')}`
+        song.innerHTML = `<h1 class="text-white text-4xl mb-3">${data.playlistName}</h1> ${data.songs.map(song => `<button data-song-number="${song.songNumber}" class="text-white btnsSong text-xl hover:text-gray-500">${song.name}</button><br>`).join('')}`
         const btnsSong = document.querySelectorAll('.btnsSong');
         btnsSong.forEach(btnSong => {
             btnSong.addEventListener('click', () => {
-                displayComment(btnSong.id, data)
-                displaySong(data, btnSong.id)
+                displayComment(btnSong.dataset.songNumber, data)
+                displaySong(data, btnSong.dataset.songNumber, false, false)
             })
         });
     });
@@ -43,33 +44,32 @@ async function displayComment(songNumber, data) {
     const data2 = await response.json();
     const comment = document.querySelector('#comment');
     comment.innerHTML = ` 
-    <h1 class="text-white text-5xl mb-3">Comments</h1>
+    <h1 class="text-white text-4xl mb-3">Comments</h1>
     <form id="form" class="space-y-3" action="add-comment.php" method="post">
-    <label for="text" class="text-white pl-3 text-2xl">Add a comment :</label><br>
-    <input id="inputText" type="text" name="text" class="px-3 py-1 rounded-xl w-4/5 text-2xl" required>
-    <input id="inputSongId" type="hidden" name="songId" value="${songNumber}">
-    <button type="submit" class="text-white bg-gray-600 px-3 py-1 rounded-xl text-xl">Comment</button>
+    <label for="text" class="text-white pl-3 text-xl">Add a comment :</label><br>
+    <input id="inputText" type="text" name="text" class="px-3 py-1 rounded-xl w-4/5 text-xl hover:bg-gray-300" required>
+    <button type="submit" class="text-white bg-gray-600 px-3 py-1 rounded-xl text-xl hover:bg-gray-500">Comment</button>
 </form>
-<ul class="text-2xl space-y-3">${data2.commentsText.map(commentText => `<li class='text-white'>• ${commentText}</li>`).join('')}</ul>`
+<ul class="text-xl space-y-3">${data2.commentsText.map(commentText => `<li class='text-white'>• ${commentText}</li>`).join('')}</ul>`
 
 const form = document.querySelector('#form');
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async(event) => {
     event.preventDefault();
-    fetch("add-comment.php", {
+    await fetch("add-comment.php", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             "text": form.querySelector("#inputText").value,
-            "songId": form.querySelector('#inputSongId').value
+            "songId": songId
         })
     })
     displayComment(songNumber, data)
 })
 }
 
-async function displaySong(data, songNumber, audioRepete, audioRandom) {
+async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio) {
     let songId = null;
         data.songs.forEach(song => {
             if (song.songNumber == songNumber) {
@@ -101,10 +101,10 @@ async function displaySong(data, songNumber, audioRepete, audioRandom) {
         <h1 class="text-white text-5xl place-self-center">${data2.song.name}</h1>
 
             <input id="progressBar" class="w-full accent-slate-500" type="range" min="0" max="100" value="0">
-        <div class="flex flex-row space-x-3">
-            <button id="btnRandom" class="text-white bg-gray-600 rounded-2xl"><img id="imgRandom" class="size-16 mx-4" src="assets/img/btn-random.png"></button>
-            <button id="btnPlayPause" class="text-white bg-gray-600 rounded-2xl px-3 py-1"><img id="imgPlayPause" class="size-14" src="assets/img/btn-play.png"></button>
-            <button id="btnRepete" class="text-white bg-gray-600 rounded-2xl"><img id="imgPlayPause" class="size-24" src="assets/img/btn-repete.png"></button>
+        <div class="flex flex-row space-x-24">
+            <button id="btnRandom" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img id="imgRandom" class="size-8 mx-3" src="assets/img/btn-random.png"></button>
+            <button id="btnPlayPause" class="text-white bg-gray-600 rounded-2xl px-3 py-1 hover:bg-gray-500"><img id="imgPlayPause" class="size-8" src="assets/img/btn-play.png"></button>
+            <button id="btnRepete" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img id="imgPlayPause" class="size-14" src="assets/img/btn-repete.png"></button>
         </div>
     `
 
@@ -180,9 +180,14 @@ async function displaySong(data, songNumber, audioRepete, audioRandom) {
                 randomSong = Math.floor(Math.random() * data.songs.length)
             }
             displaySong(data, randomSong, audioRepete = false, audioRandom = true)
+            displayComment(randomSong, data)
         } else {
-            imgPlayPause.src = "assets/img/btn-play.png";
-            progressBar.value = 0;
+            let nextSong = parseInt(songNumber) + 1
+            if (nextSong > data.songs.length - 1) {
+                nextSong = 0
+            }
+            displaySong(data, nextSong, audioRepete = false, audioRandom = false, playAudio = true)
+            displayComment(nextSong, data)
         }
     })
 
@@ -198,5 +203,10 @@ async function displaySong(data, songNumber, audioRepete, audioRandom) {
         imgPlayPause.src = "assets/img/btn-pause.png";
         random = true 
         btnRandom.classList.add("bg-gray-500")
+    }
+
+    if (playAudio) {
+        audio.play()
+        imgPlayPause.src = "assets/img/btn-pause.png";
     }
 }
