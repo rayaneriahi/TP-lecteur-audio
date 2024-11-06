@@ -9,12 +9,16 @@ $data = json_decode($jsonData, true);
 $songsCurrentPlaylist = [];
 $commentsText = [];
 
+$i = 0;
 foreach ($songs as $song) {
     if ($data["playlistId"] == $song["playlist_id"])  {
-        array_push($songsCurrentPlaylist, [
-            'name' => $song["name"],
-            'id' => $song["id"]
-        ]);
+        $songEntry = [
+            "songNumber" => $i++,
+            "name" => $song["name"],
+            "mp3" => $song["mp3"],
+            "id" => $song["id"],
+        ];
+        $songsCurrentPlaylist[] = $songEntry;
     }
 }
 

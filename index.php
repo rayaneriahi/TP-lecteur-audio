@@ -15,7 +15,7 @@ require_once'pdo.php';
 </head>
 <body class="bg-gray-800 flex flex-row h-screen">
     
-    <div class="h-full w-1/4 border-black border-r-2 p-5 space-y-3">
+    <div class="h-full w-1/4 border-black border-r-2 p-5 space-y-3 overflow-y-auto">
 
 
             <?php
@@ -31,7 +31,7 @@ require_once'pdo.php';
 
     </div>
 
-    <div id="song" class="h-full w-1/4 p-5 space-y-3">
+    <div id="song" class="h-full w-1/4 p-5 space-y-3 overflow-y-auto">
     </div>
 
     <div class="flex flex-col border-black border-l-2 h-full w-1/2">
