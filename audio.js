@@ -1,4 +1,5 @@
 const audioButton = document.getElementById("audioButton");
+
 const repeatButton = document.getElementById("repeatButton");
 let fadeInInterval;
 let fadeOutInterval;
@@ -28,6 +29,7 @@ const audio = document.querySelector("#myAudio");
 //         repeatButton.textContent = "No Repeat"; // Mode "Aucune répétition"
 //     }
 // });
+
 
 audioButton.addEventListener("click", () => {
         if (audio.paused) {
