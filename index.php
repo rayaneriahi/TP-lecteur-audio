@@ -13,9 +13,9 @@ require_once'pdo.php';
     <title>Lecteur audio</title>
 
 </head>
-<body class="bg-gray-800 flex flex-row h-screen">
-    
-    <div class="h-full w-1/5 border-black border-r-2 p-5 space-y-3 overflow-y-auto break-all">
+<body class="bg-gray-800 flex flex-row h-screen w-screen">
+
+    <div id="playlists" class="h-full z-20 bg-gray-800 transition-all w-full absolute overflow-hidden sm:w-1/5 sm:relative border-black border-r-2 p-5 space-y-3 overflow-y-auto break-all">
 
 
             <?php
@@ -31,10 +31,10 @@ require_once'pdo.php';
 
     </div>
 
-    <div id="song" class="h-full w-1/5 p-5 space-y-3 overflow-y-auto break-all">
+    <div id="song" class="h-full z-10 w-full transition-all absolute overflow-hidden sm:w-1/5 sm:relative p-5 space-y-3 overflow-y-auto break-all">
     </div>
 
-    <div class="flex flex-col border-black border-l-2 h-full w-3/5">
+    <div id="player-container" class="flex z-20 bg-gray-800 flex-col transition-all translate-y-full sm:translate-y-0 border-black border-l-2 h-full w-full absolute overflow-hidden sm:w-3/5 sm:relative">
 
 
     <!-- Élément audio sans contrôles visibles -->

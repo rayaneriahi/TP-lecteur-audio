@@ -13,11 +13,17 @@ btnPlaylist.forEach(btn => {
             })
         });
         const data = await response.json();
+
+        const playlists = document.querySelector('#playlists');
+        playlists.classList.add('-translate-x-full', 'sm:-translate-x-0');
+
         const song = document.querySelector('#song');
         song.innerHTML = `<h1 class="text-white text-4xl mb-3">${data.playlistName}</h1> ${data.songs.map(song => `<button data-song-number="${song.songNumber}" class="text-white btnsSong text-xl hover:text-gray-500">${song.name}</button><br>`).join('')}`
         const btnsSong = document.querySelectorAll('.btnsSong');
         btnsSong.forEach(btnSong => {
             btnSong.addEventListener('click', () => {
+                const playerContainer = document.querySelector('#player-container');
+                playerContainer.classList.add('translate-y-0');
                 displayComment(btnSong.dataset.songNumber, data)
                 displaySong(data, btnSong.dataset.songNumber, false, false)
             })
@@ -43,7 +49,7 @@ async function displayComment(songNumber, data) {
     });
     const data2 = await response.json();
     const comment = document.querySelector('#comment');
-    comment.innerHTML = ` 
+    comment.innerHTML = `
     <h1 class="text-white text-4xl mb-3">Comments</h1>
     <form id="form" class="space-y-3" action="add-comment.php" method="post">
     <label for="text" class="text-white pl-3 text-xl">Add a comment :</label><br>
@@ -138,7 +144,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
 
     audio.addEventListener('timeupdate', () => {
         if (mouseDown !== true) {
-            progressBar.value = (audio.currentTime / audio.duration) * 100 
+            progressBar.value = (audio.currentTime / audio.duration) * 100
         }
     })
 
@@ -148,7 +154,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     const btnRepete = document.querySelector('#btnRepete');
     btnRepete.addEventListener('click', () => {
         if (repete === false) {
-            repete = true 
+            repete = true
             btnRepete.classList.add("bg-gray-500")
             random = false
             btnRandom.classList.remove("bg-gray-500")
@@ -161,7 +167,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     const btnRandom = document.querySelector('#btnRandom');
     btnRandom.addEventListener('click', () => {
         if (random === false) {
-            random = true 
+            random = true
             btnRandom.classList.add("bg-gray-500")
             repete = false
             btnRepete.classList.remove("bg-gray-500")
@@ -194,14 +200,14 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     if (audioRepete) {
         audio.play()
         imgPlayPause.src = "assets/img/btn-pause.png";
-        repete = true 
+        repete = true
         btnRepete.classList.add("bg-gray-500")
     }
 
     if (audioRandom) {
         audio.play()
         imgPlayPause.src = "assets/img/btn-pause.png";
-        random = true 
+        random = true
         btnRandom.classList.add("bg-gray-500")
     }
 
