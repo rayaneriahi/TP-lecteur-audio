@@ -16,6 +16,10 @@ btnPlaylist.forEach(btn => {
             })
         });
         const data = await response.json();
+
+        const playlists = document.querySelector('#playlists');
+        playlists.classList.add('-translate-x-full', 'sm:-translate-x-0');
+
         const song = document.querySelector('#song');
         const playlist = document.querySelector('#playlist')
         playlist.classList.remove("w-full")
@@ -25,23 +29,27 @@ btnPlaylist.forEach(btn => {
         const btnsSong = document.querySelectorAll('.btnsSong')
         btnsSong.forEach(btnSong => {
             btnSong.addEventListener('click', () => {
+
                 if (!stopClick) {
                     if (audio !== null) {
                         audio.pause();
                     }
-                    const playerComment = document.querySelector('#playerComment')
+
+                    const playerContainer = document.querySelector('#player-container');
                     const player = document.querySelector('#player')
                     const comment = document.querySelector('#comment')
-                    playerComment.classList.add("flex", "flex-col", "border-black", "border-l-2", "h-full", "w-1/2")
+                    playerContainer.classList.add("translate-y-0", "flex", "flex-col", "border-black", "border-l-2", "h-full", "w-1/2")
                     player.classList.add("w-full", "h-1/2", "border-black", "border-b-2", "items-center", "justify-center", "flex", "flex-col", "space-y-20",  "px-10")
                     comment.classList.add("w-full", "h-1/2", "p-5", "space-y-5", "overflow-y-auto", "break-all")
                     playlist.classList.remove("w-1/2")
                     playlist.classList.add("w-1/3")
                     song.classList.remove("w-1/2")
                     song.classList.add("w-1/3")
+
                     displayComment(btnSong.dataset.songNumber, data)
                     displaySong(data, btnSong.dataset.songNumber, false, false, false, true, null)
                 }
+
             })
         });
     });
@@ -67,7 +75,7 @@ async function displayComment(songNumber, data) {
     });
     const data2 = await response.json();
     const comment = document.querySelector('#comment');
-    comment.innerHTML = ` 
+    comment.innerHTML = `
     <h1 class="text-white text-4xl mb-3">Comments</h1>
     <form id="form" class="space-y-3" action="add-comment.php" method="post">
     <label for="text" class="text-white pl-3 text-xl">Add a comment :</label><br>
@@ -157,12 +165,12 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
         </div>
 
             <input id="progressBar" class="w-full accent-slate-500" type="range" min="0" max="100" value="0">
-        <div class="flex flex-row space-x-10">
-            <button id="btnPrevious" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img class="size-8 mx-3" src="assets/img/btn-previous.png"></button>
-            <button id="btnRandom" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img id="imgRandom" class="size-8 mx-3" src="assets/img/btn-random.png"></button>
-            <button id="btnPlayPause" class="text-white bg-gray-600 rounded-2xl px-3 py-1 hover:bg-gray-500"><img id="imgPlayPause" class="size-8" src="assets/img/btn-play.png"></button>
-            <button id="btnRepete" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img id="imgPlayPause" class="size-14" src="assets/img/btn-repete.png"></button>
-            <button id="btnNext" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img class="size-8 mx-3 rotate-180" src="assets/img/btn-previous.png"></button>
+        <div class="flex flex-row space-x-4 md:space-x-10 p-2">
+            <button id="btnPrevious" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500 p-4"><img class = "w-10 h-10" src="assets/img/skip-start-fill.svg"></button>
+            <button id="btnRandom" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500 p-4"><img class = "w-10 h-10" src="assets/img/shuffle.svg"></button>
+            <button id="btnPlayPause" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500 p-4"><img class = "w-10 h-10" id="imgPlayPause" src="assets/img/play.svg"></button>
+            <button id="btnRepete" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500 p-4"><img class = "w-10 h-10" src="assets/img/repeat.svg"></button>
+            <button id="btnNext" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500 p-4"><img class = "w-10 h-10" src="assets/img/skip-end-fill.svg"></button>
         </div>
     `        
 
@@ -170,19 +178,19 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     const imgPlayPause = document.querySelector('#imgPlayPause');
 
     if (!fadeSecure) {
-        imgPlayPause.src = "assets/img/btn-pause.png";
+        imgPlayPause.src = "assets/img/pause.svg";
     }
 
     btnPlayPause.addEventListener('click', () => {
         if (audio.paused) {
             audio.play();
             fade();
-            imgPlayPause.src = "assets/img/btn-pause.png";
+            imgPlayPause.src = "assets/img/pause.svg";
         } else {
             audio.pause();
             fadeinStop();
             fadeoutStop();
-            imgPlayPause.src = "assets/img/btn-play.png";
+            imgPlayPause.src = "assets/img/play.svg";
         }
     })
 
@@ -211,7 +219,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     const btnRepete = document.querySelector('#btnRepete');
     btnRepete.addEventListener('click', () => {
         if (repete === false) {
-            repete = true 
+            repete = true
             btnRepete.classList.add("bg-gray-500")
             random = false
             btnRandom.classList.remove("bg-gray-500")
@@ -224,7 +232,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     const btnRandom = document.querySelector('#btnRandom');
     btnRandom.addEventListener('click', () => {
         if (random === false) {
-            random = true 
+            random = true
             btnRandom.classList.add("bg-gray-500")
             repete = false
             btnRepete.classList.remove("bg-gray-500")
@@ -269,7 +277,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
             const btnPrevious = document.querySelector('#btnPrevious');
             btnPrevious.disabled = true
             const imgPlayPause = document.querySelector('#imgPlayPause');
-            imgPlayPause.src = "assets/img/btn-pause.png"
+            imgPlayPause.src = "assets/img/pause.svg"
             nextSongFade = true
             let nextSong = parseInt(songNumber) + 1
             if (nextSong > data.songs.length - 1) {
@@ -314,23 +322,23 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
     if (audioRepete) {
         audio.play()
         fade()
-        imgPlayPause.src = "assets/img/btn-pause.png";
-        repete = true 
+        imgPlayPause.src = "assets/img/pause.svg";
+        repete = true
         btnRepete.classList.add("bg-gray-500")
     }
 
     if (audioRandom) {
         audio.play()
         fade()
-        imgPlayPause.src = "assets/img/btn-pause.png";
-        random = true 
+        imgPlayPause.src = "assets/img/pause.svg";
+        random = true
         btnRandom.classList.add("bg-gray-500")
     }
 
     if (playAudio) {
         audio.play()
         fade()
-        imgPlayPause.src = "assets/img/btn-pause.png";
+        imgPlayPause.src = "assets/img/pause.svg";
     }
 
     progressBar.addEventListener('change', () => {
