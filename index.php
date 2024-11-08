@@ -14,9 +14,9 @@ require_once'pdo.php';
 
 </head>
 
-<body class="bg-gradient-to-tr to-gray-600 from-gray-800 flex flex-row h-screen">
+<body class="bg-gray-800 flex flex-row h-screen w-screen">
     
-    <div class="h-full w-1/4 border-black border-r-2 overflow-y-auto whitespace-nowrap">
+    <div id="playlists" class="h-full z-20 bg-gray-800 transition-all w-full absolute overflow-hidden sm:w-1/5 sm:relative border-black border-r-2 p-5 space-y-3 overflow-y-auto break-all">
 
             <?php
 
@@ -31,10 +31,10 @@ require_once'pdo.php';
 
     </div>
 
-    <div id="song" class="h-full w-1/4 overflow-y-auto whitespace-nowrap">
+    <div id="song" class="h-full z-10 w-full transition-all absolute overflow-hidden sm:w-1/5 sm:relative p-5 space-y-3 overflow-y-auto break-all">
     </div>
 
-    <div class="flex flex-col border-black border-l-2 h-full w-1/2">
+    <div id="player-container" class="flex z-20 bg-gray-800 flex-col transition-all translate-y-full sm:translate-y-0 border-black border-l-2 h-full w-full absolute overflow-hidden sm:w-3/5 sm:relative">
 
     <!-- Élément audio sans contrôles visibles -->
     <!-- <audio id="myAudio" class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
@@ -43,11 +43,11 @@ require_once'pdo.php';
     <button id="repeatButton" class="text-white">No repeat</button> Bouton pour activer/désactiver la répétition -->
 
 
-        <div id="player" class="w-full h-1/2 border-black border-b-2 items-center justify-center flex flex-col space-y-20  px-10">
-        </div>
+    <div id="player" class="w-full h-1/2 border-black border-b-2 items-center justify-center flex flex-col space-y-20  px-10">
+    </div>
 
-        <div id="comment" class="w-full h-1/2 p-5 space-y-5 overflow-y-auto break-all">
-        </div>
+    <div id="comment" class="w-full h-1/2 p-5 space-y-5 overflow-y-auto break-all">
+    </div>
 
     </div>
 
