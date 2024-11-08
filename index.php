@@ -13,17 +13,17 @@ require_once'pdo.php';
     <title>Lecteur audio</title>
 
 </head>
-<body class="bg-gray-800 flex flex-row h-screen w-screen">
 
-    <div id="playlists" class="h-full z-20 bg-gray-800 transition-all w-full absolute overflow-hidden sm:w-1/5 sm:relative border-black border-r-2 p-5 space-y-3 overflow-y-auto break-all">
-
+<body class="bg-gradient-to-tr to-gray-600 from-gray-800 flex flex-row h-screen">
+    
+    <div class="h-full w-1/4 border-black border-r-2 overflow-y-auto whitespace-nowrap">
 
             <?php
 
             if (!empty($playlists)) {
-                echo "<h1 class='text-white text-4xl mb-3'>Playlists</h1>";
+                echo "<h1 class='text-white text-4xl p-5'>Playlists</h1>";
                 foreach ($playlists as $playlist) {
-                    echo '<button id="' . $playlist["id"] . '" class="text-white btnPlaylist text-xl hover:text-gray-500">' . $playlist["name"] . '</button><br>';
+                    echo '<div data-playlist-id="' . $playlist["id"] . '" class="cursor-pointer flex flex-row items-center space-x-3 p-5 hover:bg-gray-600 btnPlaylist"><img class="size-14 rounded-xl bg-black" src="' . $playlist["picture"] . '"><div class="flex flex-col"><span class="text-white text-base hover:text-gray-500">' . $playlist["name"] . '</span><span class="text-sm cursor-pointer text-gray-400">' . $playlist["author"] . ' songs</span></div></div>';
                 }
             }
 
@@ -31,11 +31,10 @@ require_once'pdo.php';
 
     </div>
 
-    <div id="song" class="h-full z-10 w-full transition-all absolute overflow-hidden sm:w-1/5 sm:relative p-5 space-y-3 overflow-y-auto break-all">
+    <div id="song" class="h-full w-1/4 overflow-y-auto whitespace-nowrap">
     </div>
 
-    <div id="player-container" class="flex z-20 bg-gray-800 flex-col transition-all translate-y-full sm:translate-y-0 border-black border-l-2 h-full w-full absolute overflow-hidden sm:w-3/5 sm:relative">
-
+    <div class="flex flex-col border-black border-l-2 h-full w-1/2">
 
     <!-- Élément audio sans contrôles visibles -->
     <!-- <audio id="myAudio" class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>

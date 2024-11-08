@@ -17,6 +17,8 @@ foreach ($songs as $song) {
             "name" => $song["name"],
             "mp3" => $song["mp3"],
             "id" => $song["id"],
+            "artist" => $song["artist"],
+            "picture" => $song["picture"],
         ];
         $songsCurrentPlaylist[] = $songEntry;
     }

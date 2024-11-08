@@ -1,6 +1,8 @@
 const btnPlaylist = document.querySelectorAll('.btnPlaylist');
-let nextSong = null;
-
+let nextSongFade = null;
+let audio = null;
+let stopClick = false
+ 
 btnPlaylist.forEach(btn => {
     btn.addEventListener('click', async () => {
         const response = await fetch("song.php", {
@@ -9,7 +11,7 @@ btnPlaylist.forEach(btn => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                "playlistId": btn.id
+                "playlistId": btn.dataset.playlistId
             })
         });
         const data = await response.json();
@@ -18,18 +20,25 @@ btnPlaylist.forEach(btn => {
         playlists.classList.add('-translate-x-full', 'sm:-translate-x-0');
 
         const song = document.querySelector('#song');
-        song.innerHTML = `<h1 class="text-white text-4xl mb-3">${data.playlistName}</h1> ${data.songs.map(song => `<button data-song-number="${song.songNumber}" class="text-white btnsSong text-xl hover:text-gray-500">${song.name}</button><br>`).join('')}`
+        song.innerHTML = `<h1 class="text-white text-4xl p-5">${data.playlistName}</h1> ${data.songs.map(song => `<div data-song-number="${song.songNumber}" class="cursor-pointer flex flex-row items-center btnsSong space-x-3 p-5 hover:bg-gray-600"><img class="size-14 rounded-xl bg-black" src="${song.picture}"><div class="flex flex-col"><span class="cursor-pointer text-white text-base">${song.name}</span><span class="text-sm cursor-pointer text-gray-400">${song.artist}</span></div></div>`).join('')}`
         const btnsSong = document.querySelectorAll('.btnsSong');
         btnsSong.forEach(btnSong => {
             btnSong.addEventListener('click', () => {
-                const playerContainer = document.querySelector('#player-container');
-                playerContainer.classList.add('translate-y-0');
-                displayComment(btnSong.dataset.songNumber, data)
-                displaySong(data, btnSong.dataset.songNumber, false, false)
+
+                if (!stopClick) {
+                    if (audio !== null) {
+                        audio.pause();
+                    }
+                    displayComment(btnSong.dataset.songNumber, data)
+                    displaySong(data, btnSong.dataset.songNumber, false, false, false, true, null)
+                }
+
             })
         });
     });
 })
+
+
 
 async function displayComment(songNumber, data) {
         let songId = null;
@@ -53,10 +62,12 @@ async function displayComment(songNumber, data) {
     <h1 class="text-white text-4xl mb-3">Comments</h1>
     <form id="form" class="space-y-3" action="add-comment.php" method="post">
     <label for="text" class="text-white pl-3 text-xl">Add a comment :</label><br>
-    <input id="inputText" type="text" name="text" class="px-3 py-1 rounded-xl w-4/5 text-xl hover:bg-gray-300" required>
-    <button type="submit" class="text-white bg-gray-600 px-3 py-1 rounded-xl text-xl hover:bg-gray-500">Comment</button>
+    <div class="flex flex-row items-center space-x-3">
+        <input id="inputText" type="text" name="text" class="px-3 py-1 rounded-xl w-4/5 text-xl hover:bg-gray-300" required>
+        <button type="submit" class="text-white bg-gray-600 px-3 py-1 rounded-xl text-base hover:bg-gray-500">Comment</button>
+    </div>
 </form>
-<ul class="text-xl space-y-3">${data2.commentsText.map(commentText => `<li class='text-white'>• ${commentText}</li>`).join('')}</ul>`
+<ul class="text-base space-y-3">${data2.commentsText.map(commentText => `<li class='text-white'>• ${commentText}</li>`).join('')}</ul>`
 
 const form = document.querySelector('#form');
 form.addEventListener('submit', async(event) => {
@@ -75,59 +86,89 @@ form.addEventListener('submit', async(event) => {
 })
 }
 
-async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio) {
+async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio, fadeSecure, audio2, data3) {
+    let data2 = null
+    let intervalfadeIn = null
+    let intervalfadeOut = null
+    let nextSongFade = false
+    audio = null
+    let timeEnd = false
+    let fadeOff = false
+
     let songId = null;
+
+    if (!fadeSecure) {
+        audio = audio2
+        data2 = data3
+        stopClick = false
+    } else {
         data.songs.forEach(song => {
             if (song.songNumber == songNumber) {
                 songId = song.id
             }
-    });
+        });
 
-    const response = await fetch("fetch-player.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            "songId": songId
-        })
-    });
-    const data2 = await response.json();
-    const audio = new Audio(data2.song.mp3);
+        const response = await fetch("fetch-player.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "songId": songId
+            })
+        });
+        data2 = await response.json();
+        audio = new Audio(data2.song.mp3);
+    }
 
     const btnsSong = document.querySelectorAll('.btnsSong');
     btnsSong.forEach(btnSong => {
         btnSong.addEventListener('click', () => {
-            audio.pause()
+            if (!stopClick) {
+                if (audio !== null) {
+                    audio.pause()
+                }
+                clearInterval(intervalfadeIn)
+                clearInterval(intervalfadeOut)
+            }
         })
     });
 
+    console.log(data2)
+  
     const player = document.querySelector('#player');
     player.innerHTML = `
         <h1 class="text-white text-5xl place-self-center">${data2.song.name}</h1>
 
             <input id="progressBar" class="w-full accent-slate-500" type="range" min="0" max="100" value="0">
-        <div class="flex flex-row space-x-24">
+        <div class="flex flex-row space-x-10">
+            <button id="btnPrevious" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img class="size-8 mx-3" src="assets/img/btn-previous.png"></button>
             <button id="btnRandom" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img id="imgRandom" class="size-8 mx-3" src="assets/img/btn-random.png"></button>
             <button id="btnPlayPause" class="text-white bg-gray-600 rounded-2xl px-3 py-1 hover:bg-gray-500"><img id="imgPlayPause" class="size-8" src="assets/img/btn-play.png"></button>
             <button id="btnRepete" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img id="imgPlayPause" class="size-14" src="assets/img/btn-repete.png"></button>
+            <button id="btnNext" class="text-white bg-gray-600 rounded-2xl hover:bg-gray-500"><img class="size-8 mx-3 rotate-180" src="assets/img/btn-previous.png"></button>
         </div>
-    `
+    `        
 
     const btnPlayPause = document.querySelector('#btnPlayPause');
     const imgPlayPause = document.querySelector('#imgPlayPause');
 
+    if (!fadeSecure) {
+        imgPlayPause.src = "assets/img/btn-pause.png";
+    }
+
     btnPlayPause.addEventListener('click', () => {
         if (audio.paused) {
             audio.play();
+            fade();
             imgPlayPause.src = "assets/img/btn-pause.png";
         } else {
             audio.pause();
+            fadeinStop();
+            fadeoutStop();
             imgPlayPause.src = "assets/img/btn-play.png";
         }
     })
-
-    const progressBar = document.querySelector('#progressBar');
 
     progressBar.addEventListener('change', () => {
         audio.currentTime = (progressBar.value * audio.duration) / 100
@@ -179,26 +220,80 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
 
     audio.addEventListener('ended', () => {
         if (repete === true) {
-            displaySong(data, songNumber, audioRepete = true)
+            displaySong(data, songNumber, true, false, false, true, null)
         } else if (random === true) {
             randomSong = songNumber
             while (randomSong == songNumber) {
                 randomSong = Math.floor(Math.random() * data.songs.length)
             }
-            displaySong(data, randomSong, audioRepete = false, audioRandom = true)
+            displaySong(data, randomSong, false, true, false, true, null)
             displayComment(randomSong, data)
-        } else {
+        } else if (nextSongFade == false) {
             let nextSong = parseInt(songNumber) + 1
             if (nextSong > data.songs.length - 1) {
                 nextSong = 0
             }
-            displaySong(data, nextSong, audioRepete = false, audioRandom = false, playAudio = true)
+            displaySong(data, nextSong, false, false, true, true, null)
             displayComment(nextSong, data)
+        }
+    })
+
+    audio.addEventListener('timeupdate', () => {
+        if (audio.currentTime > audio.duration - 5.2 && audio.currentTime < audio.duration - 4.8 && timeEnd == false && !audio.paused && repete == false && random == false) {
+            timeEnd = true
+            stopClick = true
+            const progressBar = document.querySelector('#progressBar');
+            progressBar.disabled = true
+            const btnPlayPause = document.querySelector('#btnPlayPause');
+            btnPlayPause.disabled = true
+            const btnsSong = document.querySelectorAll('.btnsSong');
+            btnsSong.disabled = true
+            const imgPlayPause = document.querySelector('#imgPlayPause');
+            imgPlayPause.src = "assets/img/btn-pause.png"
+            nextSongFade = true
+            let nextSong = parseInt(songNumber) + 1
+            if (nextSong > data.songs.length - 1) {
+                nextSong = 0
+            }
+            songId = null;
+            data.songs.forEach(song => {
+                if (song.songNumber == nextSong) {
+                    songId = song.id
+                }
+            });
+            PlayNextSong()
+            async function PlayNextSong () {
+                const response = await fetch("fetch-player.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "songId": songId
+                    })
+                });
+                const data3 = await response.json();
+                const audio2 = new Audio(data3.song.mp3);
+                audio2.play()
+                audio2.volume = 0
+                let interval = setInterval (() => {
+                    audio2.volume += 0.02
+                    if (audio2.volume > 0.98) {
+                        audio2.volume = 1
+                        clearInterval(interval)
+                    }
+                }, 100)
+                audio.addEventListener('ended', () => {
+                    displaySong(data, nextSong, false, false, false, false, audio2, data3)
+                    displayComment(nextSong, data)
+                })
+            }
         }
     })
 
     if (audioRepete) {
         audio.play()
+        fade()
         imgPlayPause.src = "assets/img/btn-pause.png";
         repete = true
         btnRepete.classList.add("bg-gray-500")
@@ -206,6 +301,7 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
 
     if (audioRandom) {
         audio.play()
+        fade()
         imgPlayPause.src = "assets/img/btn-pause.png";
         random = true
         btnRandom.classList.add("bg-gray-500")
@@ -213,6 +309,103 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
 
     if (playAudio) {
         audio.play()
+        fade()
         imgPlayPause.src = "assets/img/btn-pause.png";
     }
+
+    progressBar.addEventListener('change', () => {
+        if (audio.currentTime > 5) {
+            fadeOff = true
+        }
+    })
+
+    function fade() {
+        if (audio.currentTime < 0.1 && audio.currentTime < 5 && fadeOff == false) {
+            audio.volume = 0;
+            fadeIn();
+        } else if (audio.volume < 1 && audio.currentTime < 5 && fadeOff == false) {
+            fadeIn();
+        } else {
+            audio.volume = 1
+        }
+    }
+
+    function fadeIn() {
+        console.log("fadeIn activé")
+        intervalfadeIn = setInterval(() => {
+            if (audio.paused) {
+                clearInterval(intervalfadeIn)
+            } else if (fadeOff == true) {
+                clearInterval(intervalfadeIn)
+            } else {
+                audio.volume += 0.02;
+            }
+            if (audio.volume >= 0.98) {
+                audio.volume = 1
+                console.log("fade in fini")
+                clearInterval(intervalfadeIn);
+            }
+        }, 100);
+    }
+
+    function fadeinStop() {
+        if ( audio.volume < 1)
+            console.log("fadeIn désactivé")
+            clearInterval(intervalfadeIn);
+    }
+
+    audio.addEventListener('timeupdate', () => {
+        if (audio.currentTime > audio.duration - 5.2 && audio.currentTime < audio.duration - 4.8 && audio.volume == 1 && timeEnd == false && !audio.paused && repete == false && random == false) {
+            timeEnd = true
+            fadeOut();
+        }
+    })
+
+    function fadeOut() {
+        console.log("fadeOut activé")
+        intervalfadeOut = setInterval(() => {
+            audio.volume -= 0.02;
+            if (audio.volume <= 0.02) {
+                audio.volume = 0
+                console.log("fade out fini")
+                clearInterval(intervalfadeOut);
+            }
+        }, 100);
+    }
+
+    function fadeoutStop() {
+        if ( audio.volume > 0)
+            console.log("fadeOut désactivé")
+            clearInterval(intervalfadeOut);
+    }
+
+    const btnPrevious = document.querySelector('#btnPrevious');
+    btnPrevious.addEventListener('click', () => {
+        if (!audio.paused) {
+        audio.pause()
+        clearInterval(intervalfadeIn)
+        }
+        let previousSong = parseInt(songNumber) - 1
+        if (previousSong < 0) {
+            previousSong = data.songs.length - 1
+        }
+        displaySong(data, previousSong, false, false, true, true)
+        console.log(previousSong)
+        displayComment(previousSong, data)
+    })
+    
+    const btnNext = document.querySelector('#btnNext');
+    btnNext.addEventListener('click', () => {
+        if (!audio.paused) {
+        audio.pause()
+        clearInterval(intervalfadeIn)
+        }
+        let nextSong = parseInt(songNumber) + 1
+        if (nextSong > data.songs.length - 1) {
+            nextSong = 0
+        }
+        displaySong(data, nextSong, false, false, true, true)
+        console.log(nextSong)
+        displayComment(nextSong, data)
+    })
 }
