@@ -13,10 +13,10 @@ require_once'pdo.php';
     <title>Lecteur audio</title>
 
 </head>
+
 <body class="bg-gradient-to-tr to-gray-600 from-gray-800 flex flex-row h-screen">
     
     <div class="h-full w-1/4 border-black border-r-2 overflow-y-auto whitespace-nowrap">
-
 
             <?php
 
@@ -35,7 +35,6 @@ require_once'pdo.php';
     </div>
 
     <div class="flex flex-col border-black border-l-2 h-full w-1/2">
-
 
     <!-- Élément audio sans contrôles visibles -->
     <!-- <audio id="myAudio" class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
