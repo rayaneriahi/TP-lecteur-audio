@@ -5,6 +5,7 @@ let stopClick = false
  
 btnPlaylist.forEach(btn => {
     btn.addEventListener('click', async () => {
+        console.log(btn.dataset.playlistId)
         const response = await fetch("song.php", {
             method: "POST",
             headers: {
@@ -20,8 +21,12 @@ btnPlaylist.forEach(btn => {
         playlists.classList.add('-translate-x-full', 'sm:-translate-x-0');
 
         const song = document.querySelector('#song');
-        song.innerHTML = `<h1 class="text-white text-4xl p-5">${data.playlistName}</h1> ${data.songs.map(song => `<div data-song-number="${song.songNumber}" class="cursor-pointer flex flex-row items-center btnsSong space-x-3 p-5 hover:bg-gray-600"><img class="size-14 rounded-xl bg-black" src="${song.picture}"><div class="flex flex-col"><span class="cursor-pointer text-white text-base">${song.name}</span><span class="text-sm cursor-pointer text-gray-400">${song.artist}</span></div></div>`).join('')}`
-        const btnsSong = document.querySelectorAll('.btnsSong');
+        const playlist = document.querySelector('#playlist')
+        playlist.classList.remove("w-full")
+        playlist.classList.add("w-1/2")
+        song.classList.add("h-full", "w-1/2", "overflow-y-auto", "flex", "flex-col")
+        song.innerHTML = `<div class="flex flex-row items-center space-x-5 justify-center h-1/6"><img src="${data.playlist[0].picture}" class="size-28 rounded-xl bg-black"><div class="flex flex-col ml-5 justify-center"><h1 class="text-white text-4xl">${data.playlist[0].name}</h1><span class="text-gray-400 text-xl">${data.playlist[0].author}</span></div></div> <div class="flex flex-row px-5 flex-wrap">${data.songs.map(song => `<div data-song-number="${song.songNumber}" class="cursor-pointer flex flex-row items-center btnsSong space-x-3 p-5 m-5 hover:bg-gray-600"><img class="size-14 rounded-xl bg-black" src="${song.picture}"><div class="flex flex-col"><span class="cursor-pointer text-white text-base">${song.name}</span><span class="text-sm cursor-pointer text-gray-400">${song.artist}</span></div></div>`).join('')}</div>`
+        const btnsSong = document.querySelectorAll('.btnsSong')
         btnsSong.forEach(btnSong => {
             btnSong.addEventListener('click', () => {
 
@@ -29,8 +34,18 @@ btnPlaylist.forEach(btn => {
                     if (audio !== null) {
                         audio.pause();
                     }
+
                     const playerContainer = document.querySelector('#player-container');
-                    playerContainer.classList.add('translate-y-0');
+                    const player = document.querySelector('#player')
+                    const comment = document.querySelector('#comment')
+                    playerContainer.classList.add("translate-y-0", "flex", "flex-col", "border-black", "border-l-2", "h-full", "w-1/2")
+                    player.classList.add("w-full", "h-1/2", "border-black", "border-b-2", "items-center", "justify-center", "flex", "flex-col", "space-y-20",  "px-10")
+                    comment.classList.add("w-full", "h-1/2", "p-5", "space-y-5", "overflow-y-auto", "break-all")
+                    playlist.classList.remove("w-1/2")
+                    playlist.classList.add("w-1/3")
+                    song.classList.remove("w-1/2")
+                    song.classList.add("w-1/3")
+
                     displayComment(btnSong.dataset.songNumber, data)
                     displaySong(data, btnSong.dataset.songNumber, false, false, false, true, null)
                 }
@@ -140,7 +155,14 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
   
     const player = document.querySelector('#player');
     player.innerHTML = `
-        <h1 class="text-white text-5xl place-self-center">${data2.song.name}</h1>
+
+        <div class="flex flex-row items-center space-x-5">
+            <img src="${data2.song.picture}" class="size-28 rounded-xl bg-black">
+            <div class="flex flex-col ml-5 ">
+                <h1 class="text-white text-5xl">${data2.song.name}</h1>
+                <span class="text-gray-400 text-2xl">${data2.song.artist}</span>
+            </div>
+        </div>
 
             <input id="progressBar" class="w-full accent-slate-500" type="range" min="0" max="100" value="0">
         <div class="flex flex-row space-x-4 md:space-x-10 p-2">
@@ -250,6 +272,10 @@ async function displaySong(data, songNumber, audioRepete, audioRandom, playAudio
             btnPlayPause.disabled = true
             const btnsSong = document.querySelectorAll('.btnsSong');
             btnsSong.disabled = true
+            const btnNext = document.querySelector('#btnNext');
+            btnNext.disabled = true
+            const btnPrevious = document.querySelector('#btnPrevious');
+            btnPrevious.disabled = true
             const imgPlayPause = document.querySelector('#imgPlayPause');
             imgPlayPause.src = "assets/img/pause.svg"
             nextSongFade = true

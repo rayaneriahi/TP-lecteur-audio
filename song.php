@@ -8,6 +8,7 @@ $data = json_decode($jsonData, true);
 
 $songsCurrentPlaylist = [];
 $commentsText = [];
+$currentPlaylist = [];
 
 $i = 0;
 foreach ($songs as $song) {
@@ -26,13 +27,18 @@ foreach ($songs as $song) {
 
 foreach ($playlists as $playlist) {
     if ($data["playlistId"] == $playlist["id"])  {
-        $playlistName = $playlist["name"];
+        $plalistEntry = [
+            "name" => $playlist["name"],
+            "author" => $playlist["author"],
+            "picture" => $playlist["picture"]
+        ];
+        $currentPlaylist[] = $plalistEntry;
     }
 }
 
 echo json_encode([
     "songs" => $songsCurrentPlaylist,
-    "playlistName" => $playlistName,
+    "playlist" => $currentPlaylist,
 ]);
 
 ?>
