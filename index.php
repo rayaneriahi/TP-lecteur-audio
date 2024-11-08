@@ -15,39 +15,38 @@ require_once'pdo.php';
 </head>
 <body class="bg-gradient-to-tr to-gray-600 from-gray-800 flex flex-row h-screen">
     
-    <div class="h-full w-1/4 border-black border-r-2 overflow-y-auto whitespace-nowrap">
-
+    <div id="playlist" class="h-full w-full border-black border-r-2 overflow-y-auto flex flex-col">
+    <!-- h-full w-1/4 border-black border-r-2 overflow-y-auto whitespace-nowrap -->
 
             <?php
 
             if (!empty($playlists)) {
-                echo "<h1 class='text-white text-4xl p-5'>Playlists</h1>";
+                echo "<div class='content-center justify-center h-1/6'><h1 class='text-white text-4xl text-center'>Playlists</h1></div>
+                <div class='flex flex-row px-5 flex-wrap'>";
                 foreach ($playlists as $playlist) {
-                    echo '<div data-playlist-id="' . $playlist["id"] . '" class="cursor-pointer flex flex-row items-center space-x-3 p-5 hover:bg-gray-600 btnPlaylist"><img class="size-14 rounded-xl bg-black" src="' . $playlist["picture"] . '"><div class="flex flex-col"><span class="text-white text-base hover:text-gray-500">' . $playlist["name"] . '</span><span class="text-sm cursor-pointer text-gray-400">' . $playlist["author"] . ' songs</span></div></div>';
+                    echo '<div data-playlist-id="' . $playlist["id"] . '" class="cursor-pointer flex flex-row space-x-3 m-5 p-5 hover:bg-gray-600 btnPlaylist"><img class="size-14 rounded-xl bg-black" src="' . $playlist["picture"] . '"><div class="flex flex-col justify-center"><span class="text-white text-base">' . $playlist["name"] . '</span><span class="text-sm cursor-pointer text-gray-400">' . $playlist["author"] . ' </span></div></div>';
                 }
+                echo "</div>";
             }
 
             ?>
 
     </div>
 
-    <div id="song" class="h-full w-1/4 overflow-y-auto whitespace-nowrap">
+    <div id="song" class="">
+    <!-- h-full w-1/4 overflow-y-auto whitespace-nowrap -->
     </div>
 
-    <div class="flex flex-col border-black border-l-2 h-full w-1/2">
+    <div id="playerComment" class="">
+    <!-- flex flex-col border-black border-l-2 h-full w-1/2" -->
 
 
-    <!-- Élément audio sans contrôles visibles -->
-    <!-- <audio id="myAudio" class="myAudio" src="assets/music/music1.mp3" preload="auto"></audio>
-    <audio class="myAudio" src="assets/music/music2.mp3" preload="auto"></audio>
-    <button id="audioButton" class="text-white">Play/Pause</button>
-    <button id="repeatButton" class="text-white">No repeat</button> Bouton pour activer/désactiver la répétition -->
-
-
-        <div id="player" class="w-full h-1/2 border-black border-b-2 items-center justify-center flex flex-col space-y-20  px-10">
+        <div id="player" class="">
+        <!-- w-full h-1/2 border-black border-b-2 items-center justify-center flex flex-col space-y-20  px-10 -->
         </div>
 
-        <div id="comment" class="w-full h-1/2 p-5 space-y-5 overflow-y-auto break-all">
+        <div id="comment" class="">
+        <!-- w-full h-1/2 p-5 space-y-5 overflow-y-auto break-all -->
         </div>
 
     </div>
